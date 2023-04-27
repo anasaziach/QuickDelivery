@@ -9,11 +9,19 @@ const Stack = createNativeStackNavigator();
 export default App=()=>{
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{
+        headerShown: false
+        }}
+      >
         <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{title: 'Home'}}
+        />
+        <Stack.Screen
+          name="RecipeDetailScreen"
+          component={RecipeDetailScreen}
+          options={{title: 'RecipeDetailScreen'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

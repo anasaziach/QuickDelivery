@@ -9,13 +9,15 @@ import {
   View,
 } from "react-native";
 import React from "react";
+import DATA from "../../config/Restaurant/DATA";
 
 import SPACING from "../../config/SPACING";
 const { height } = Dimensions.get("window");
 import { Ionicons } from "@expo/vector-icons";
 import colors from "../../config/Restaurant/colors";
 
-const RecipeDetailScreen = ({ recipe }) => {
+const RecipeDetailScreen = (props) => {
+  const recipe=DATA[0].recipes[1];
   return (
     <>
       <ScrollView>
@@ -29,7 +31,7 @@ const RecipeDetailScreen = ({ recipe }) => {
               flexDirection: "row",
               justifyContent: "space-between",
             }}
-            source={recipe.image}
+            source={recipe}
           >
             <TouchableOpacity
               style={{
@@ -236,7 +238,7 @@ const RecipeDetailScreen = ({ recipe }) => {
                       marginLeft: SPACING,
                     }}
                   >
-                    {ingredient.title}
+                   nskandln
                   </Text>
                 </View>
               ))}
