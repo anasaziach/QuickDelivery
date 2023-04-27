@@ -1,6 +1,6 @@
 # Food-Recipe-RN-App-Yt
 
-## Get Startedeeeeee
+## Get Started
 
 ## Step1
 
