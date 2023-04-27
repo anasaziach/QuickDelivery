@@ -18,7 +18,7 @@ const { width } = Dimensions.get("window");
 
 const ITEM_WIDTH = width / 2 - SPACING * 3;
 
-const HomeScreen = () => {
+const HomeScreen = (props) => {
   const [activeCategory, setActiveCategory] = useState(0);
   return (
     <SafeAreaView>
@@ -44,7 +44,7 @@ const HomeScreen = () => {
                   color: colors.dark,
                 }}
               >
-                Erikaasav
+                nlksnclnsaknl
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -94,7 +94,9 @@ const HomeScreen = () => {
               <TouchableOpacity
                 style={{ marginRight: SPACING * 3 }}
                 key={index}
-                onPress={() => setActiveCategory(index)}
+                onPress={() => {
+                  setActiveCategory(index)
+                }}
               >
                 <Text
                   style={[
@@ -127,6 +129,10 @@ const HomeScreen = () => {
               <TouchableOpacity
                 style={{ width: ITEM_WIDTH, marginBottom: SPACING * 2 }}
                 key={item.id}
+                onPress={()=>{
+                  console.log('ok')
+                  props.navigation.navigate('RecipeDetailScreen')
+                }}
               >
                 <Image
                   style={{
