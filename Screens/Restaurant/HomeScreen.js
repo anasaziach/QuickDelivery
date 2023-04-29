@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  StatusBar,
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,6 +23,7 @@ const HomeScreen = (props) => {
   const [activeCategory, setActiveCategory] = useState(0);
   return (
     <SafeAreaView>
+      <StatusBar barStyle={"dark-content"} />
       <ScrollView>
         <View style={{ padding: SPACING * 2 }}>
           <View
@@ -75,7 +77,9 @@ const HomeScreen = (props) => {
               backgroundColor: colors.light,
               marginVertical: SPACING * 3,
               padding: SPACING * 1.5,
-              borderRadius: SPACING,
+              borderRadius: 26,
+              borderColor:'#A9A9A9',
+              borderWidth:2
             }}
           >
             <Ionicons name="search" color={colors.gray} size={SPACING * 2.7} />
@@ -85,7 +89,7 @@ const HomeScreen = (props) => {
               style={{
                 color: colors.gray,
                 fontSize: SPACING * 2,
-                marginLeft: SPACING,
+                marginLeft: SPACING
               }}
             />
           </View>
