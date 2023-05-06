@@ -7,19 +7,70 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
+  Share
 } from "react-native";
 import React from "react";
-import DATA from "../../config/Restaurant/DATA";
 
 import SPACING from "../../config/SPACING";
 const { height } = Dimensions.get("window");
 import { Ionicons } from "@expo/vector-icons";
 import colors from "../../config/Restaurant/colors";
+import { ItemContext } from "../../App";
+import axios from "axios";
+import { ipv4 } from "../../IPV4";
+
 
 const RecipeDetailScreen = (props) => {
-  const recipe=DATA[0].recipes[1];
+  // variables
+  const {selectedItem, setSelectedItem} = React.useContext(ItemContext);
+  const [data,setData] = React.useState();
+  const [dataFetched,setDataFetched] = React.useState(0)
+
+
+  // functions
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message:
+          'share this product',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+          // console.log(result.activityType)
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
+  const fetchItemDetail=()=>{
+    console.log("ok")
+    axios.get("http://"+ipv4+":8080/api/fetchItemById",
+    {
+      params:{
+      id:selectedItem
+    },
+    })
+    .then(result=>{
+      setData(result.data)
+      console.log(result.data)
+      setDataFetched(1)
+    })
+  }
+  React.useEffect(()=>{
+    fetchItemDetail()
+    // console.log(data)
+    // console.log("value of itemSelected is :"+selectedItem)  
+  },[])
   return (
     <>
+      {dataFetched==1 ?(<>
       <ScrollView>
         <View>
           <ImageBackground
@@ -31,7 +82,7 @@ const RecipeDetailScreen = (props) => {
               flexDirection: "row",
               justifyContent: "space-between",
             }}
-            source={recipe}
+            source={{uri:data.images[0].uri}}
           >
             <TouchableOpacity
               style={{
@@ -42,6 +93,7 @@ const RecipeDetailScreen = (props) => {
                 alignItems: "center",
                 borderRadius: SPACING * 2.5,
               }}
+              onPress={()=>props.navigation.goBack()}
             >
               <Ionicons
                 name="arrow-back"
@@ -58,6 +110,7 @@ const RecipeDetailScreen = (props) => {
                 alignItems: "center",
                 borderRadius: SPACING * 2.5,
               }}
+              onPress={onShare}
             >
               <Ionicons name="share" size={SPACING * 2.5} color={colors.gray} />
             </TouchableOpacity>
@@ -87,10 +140,10 @@ const RecipeDetailScreen = (props) => {
                     fontWeight: "700",
                   }}
                 >
-                  {recipe.name}
+                  {data.title}
                 </Text>
               </View>
-              <View
+              {/* <View
                 style={{
                   padding: SPACING,
                   paddingHorizontal: SPACING * 3,
@@ -116,12 +169,12 @@ const RecipeDetailScreen = (props) => {
                 >
                   {recipe.rating}
                 </Text>
-              </View>
+              </View> */}
             </View>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <View
+              {/* <View
                 style={{
                   padding: SPACING,
                   paddingHorizontal: SPACING * 2,
@@ -201,7 +254,7 @@ const RecipeDetailScreen = (props) => {
                 >
                   {recipe.cooking_time}
                 </Text>
-              </View>
+              </View> */}
             </View>
             <View style={{ marginVertical: SPACING * 3 }}>
               <Text
@@ -213,7 +266,7 @@ const RecipeDetailScreen = (props) => {
               >
                 Ingredients
               </Text>
-              {recipe.ingredients.map((ingredient) => (
+              {/* {data.map((ingredient) => (
                 <View
                   style={{
                     marginVertical: SPACING,
@@ -241,7 +294,7 @@ const RecipeDetailScreen = (props) => {
                    nskandln
                   </Text>
                 </View>
-              ))}
+              ))} */}
             </View>
             <Text
               style={{
@@ -260,7 +313,7 @@ const RecipeDetailScreen = (props) => {
                 color: colors.gray,
               }}
             >
-              {recipe.description}
+              {data.description}
             </Text>
           </View>
         </View>
@@ -295,11 +348,11 @@ const RecipeDetailScreen = (props) => {
                 marginLeft: SPACING / 2,
               }}
             >
-              $ {recipe.price}
+              {data.total} MAD
             </Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </SafeAreaView></>):false}
     </>
   );
 };
