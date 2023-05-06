@@ -9,23 +9,47 @@ import {
   View,
   Dimensions,
   StatusBar,
+  FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import SPACING from "../../config/SPACING";
 import colors from "../../config/Restaurant/colors";
 import DATA from "../../config/Restaurant/DATA";
+import axios from "axios";
+import FloattingButton from "../../Components/FloattingButton";
+import { ipv4 } from "../../IPV4";
+import { ItemContext } from "../../App";
 const { width } = Dimensions.get("window");
 
 const ITEM_WIDTH = width / 2 - SPACING * 3;
 
 const HomeScreen = (props) => {
+  // variables
   const [activeCategory, setActiveCategory] = useState(0);
+  const [data,setData] = useState();
+  const {selectedItem, setSelectedItem} = React.useContext(ItemContext);
+  const [dataFetched,setDataFetched] = useState(0)
+
+  // functions
+  const fetchData=()=>{
+    axios.get("http://"+ipv4+":8080/api/showItems")
+    .then(result=>{
+      setData(result.data)
+      setDataFetched(1)
+    })
+  }
+  useEffect(()=>{
+    fetchData()
+    console.log("value of itemSelected is :"+selectedItem)  
+  },[])
   return (
+    <>
     <SafeAreaView>
       <StatusBar barStyle={"dark-content"} />
-      <ScrollView>
-        <View style={{ padding: SPACING * 2 }}>
+      </SafeAreaView>
+        <FloattingButton />
+        <View style={{ padding: SPACING * 2,flex:1}}>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
@@ -37,7 +61,7 @@ const HomeScreen = (props) => {
                   borderRadius: SPACING * 3,
                   marginRight: SPACING,
                 }}
-                source={require("../../assets/restaurant/avatar.jpg")}
+                source={{uri : 'https://www.leparisien.fr/resizer/gW8-0hVfHLR5fRj65PR-cStPAP0=/932x582/cloudfront-eu-central-1.images.arcpublishing.com/leparisien/47XS5SBD5FFYVL53B4STPFI4UA.jpg'}}
               />
               <Text
                 style={{
@@ -46,7 +70,7 @@ const HomeScreen = (props) => {
                   color: colors.dark,
                 }}
               >
-                nlksnclnsaknl
+                Mr. Anas
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -66,116 +90,132 @@ const HomeScreen = (props) => {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{ width: "60%", marginTop: SPACING * 2 }}>
-            <Text style={{ fontSize: SPACING * 3, fontWeight: "700" }}>
-              What would you like to order?
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              backgroundColor: colors.light,
-              marginVertical: SPACING * 3,
-              padding: SPACING * 1.5,
-              borderRadius: 26,
-              borderColor:'#A9A9A9',
-              borderWidth:2
-            }}
-          >
-            <Ionicons name="search" color={colors.gray} size={SPACING * 2.7} />
-            <TextInput
-              placeholder="Want to .."
-              placeholderTextColor={colors.gray}
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={{ width: "60%", marginTop: SPACING * 2 }}>
+              <Text style={{ fontSize: SPACING * 3, fontWeight: "700" }}>
+                What would you like to order?
+              </Text>
+            </View>
+            <View
               style={{
-                color: colors.gray,
-                fontSize: SPACING * 2,
-                marginLeft: SPACING
+                flexDirection: "row",
+                backgroundColor: colors.light,
+                marginVertical: SPACING * 3,
+                padding: SPACING * 1.5,
+                borderRadius: 26,
+                borderColor:'#A9A9A9',
+                borderWidth:2
               }}
-            />
-          </View>
-          <ScrollView horizontal>
-            {DATA.map((category, index) => (
-              <TouchableOpacity
-                style={{ marginRight: SPACING * 3 }}
-                key={index}
-                onPress={() => {
-                  setActiveCategory(index)
+            >
+              <Ionicons name="search" color={colors.gray} size={SPACING * 2.7} />
+              <TextInput
+                placeholder="Want to .."
+                placeholderTextColor={colors.gray}
+                style={{
+                  color: colors.gray,
+                  fontSize: SPACING * 2,
+                  marginLeft: SPACING
                 }}
-              >
-                <Text
+              />
+            </View>
+            {/* Categories */}
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {DATA.map((category, index) => (
+                <TouchableOpacity
                   style={[
-                    {
-                      fontSize: SPACING * 1.7,
-                      fontWeight: "600",
-                      color: colors.gray,
+                    { 
+                      marginRight: SPACING * 3,
+                      padding:10
                     },
                     activeCategory === index && {
-                      color: colors.black,
+                      backgroundColor: colors.black ,
+                      borderRadius:20,
+                    }]
+                  }
+                  key={index}
+                  onPress={() => {
+                    setActiveCategory(index)
+                    console.log(index)
+                  }}
+                >
+                  <Text
+                    style={[
+                      {
+                        fontSize: SPACING * 1.7,
+                        fontWeight: "600",
+                        color: colors.gray,
+                      },
+                      activeCategory === index && {
+                        color: colors.white,
+                        fontWeight: "700",
+                        fontSize: SPACING * 1.5,
+                      },
+                    ]}
+                  >
+                    {category.title}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+                marginVertical: SPACING * 2,
+              }}
+            >
+              {dataFetched==1 ? data.map((item,index) => (
+                <TouchableOpacity
+                  style={{ width: ITEM_WIDTH, marginBottom: SPACING * 2 }}
+                  key={index}
+                  onPress={()=>{
+                    setSelectedItem(item.id)
+                    props.navigation.navigate('RecipeDetailScreen')
+                  }}
+                >
+                  <Image
+                    style={{
+                      width: "100%",
+                      height: ITEM_WIDTH + SPACING * 3,
+                      borderRadius: SPACING * 2,
+                    }}
+                    source={{uri:item.images[0].uri}}
+                  />
+                  <Text
+                    style={{
+                      fontSize: SPACING * 2,
                       fontWeight: "700",
-                      fontSize: SPACING * 1.8,
-                    },
-                  ]}
-                >
-                  {category.title}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-              marginVertical: SPACING * 2,
-            }}
-          >
-            {DATA[activeCategory].recipes.map((item) => (
-              <TouchableOpacity
-                style={{ width: ITEM_WIDTH, marginBottom: SPACING * 2 }}
-                key={item.id}
-                onPress={()=>{
-                  console.log('ok')
-                  props.navigation.navigate('RecipeDetailScreen')
-                }}
-              >
-                <Image
-                  style={{
-                    width: "100%",
-                    height: ITEM_WIDTH + SPACING * 3,
-                    borderRadius: SPACING * 2,
-                  }}
-                  source={item.image}
-                />
-                <Text
-                  style={{
-                    fontSize: SPACING * 2,
-                    fontWeight: "700",
-                    marginTop: SPACING,
-                  }}
-                >
-                  {item.name}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: SPACING * 1.5,
-                    color: colors.gray,
-                    marginVertical: SPACING / 2,
-                  }}
-                >
-                  Today discount {item.discount}
-                </Text>
-                <Text style={{ fontSize: SPACING * 2, fontWeight: "700" }}>
-                  $ {item.price}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+                      marginTop: SPACING,
+                    }}
+                  >
+                    {item.name}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: SPACING * 1.5,
+                      color: colors.gray,
+                      marginVertical: SPACING / 2,
+                    }}
+                  >
+                    {item.description}
+                  </Text>
+                  <Text style={{ fontSize: SPACING * 2, fontWeight: "700" }}>
+                    {item.total} MAD
+                  </Text>
+                </TouchableOpacity>
+              )):false}
+            </View>
+           </ScrollView>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+    </>
   );
 };
 
 export default HomeScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  categories: {
+    borderRadius:20,
+  }
+});

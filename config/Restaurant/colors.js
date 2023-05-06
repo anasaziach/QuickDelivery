@@ -5,6 +5,7 @@ const colors = {
   gray: `rgb(120,120,120)`,
   light: `rgb(240,240,240)`,
   white: "#fff",
+  orange: '#ff8000'
 };
 
 export default colors;
