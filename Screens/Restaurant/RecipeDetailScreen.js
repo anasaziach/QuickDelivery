@@ -59,20 +59,56 @@ const RecipeDetailScreen = (props) => {
     })
     .then(result=>{
       setData(result.data)
-      console.log(result.data)
       setDataFetched(1)
     })
   }
   React.useEffect(()=>{
     fetchItemDetail()
-    // console.log(data)
-    // console.log("value of itemSelected is :"+selectedItem)  
   },[])
   return (
     <>
       {dataFetched==1 ?(<>
-      <ScrollView>
-        <View>
+      <View style={{flex:2,position:'absolute',
+                top:10,
+                left:10,}}>
+        <TouchableOpacity
+              style={{
+                height: SPACING * 4.5,
+                width: SPACING * 4.5,
+                backgroundColor: colors.white,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: SPACING * 2.5,
+                
+              }}
+              onPress={()=>props.navigation.goBack()}
+            >
+              <Ionicons
+                name="arrow-back"
+                size={SPACING * 2.5}
+                color={colors.gray}
+              />
+            </TouchableOpacity>
+            {/* <TouchableOpacity
+              style={{
+                height: SPACING * 4.5,
+                width: SPACING * 4.5,
+                backgroundColor: colors.white,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: SPACING * 2.5,
+                position:'absolute',
+                top:10,
+                left:10,
+                flex:0
+              }}
+              onPress={onShare}
+            >
+              <Ionicons name="share" size={SPACING * 2.5} color={colors.gray} />
+            </TouchableOpacity> */}
+      </View>
+      <ScrollView style={{flex:1}}>
+        <View style={{flex:1}}>
           <ImageBackground
             style={{
               padding: SPACING * 2,
@@ -84,36 +120,6 @@ const RecipeDetailScreen = (props) => {
             }}
             source={{uri:data.images[0].uri}}
           >
-            <TouchableOpacity
-              style={{
-                height: SPACING * 4.5,
-                width: SPACING * 4.5,
-                backgroundColor: colors.white,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: SPACING * 2.5,
-              }}
-              onPress={()=>props.navigation.goBack()}
-            >
-              <Ionicons
-                name="arrow-back"
-                size={SPACING * 2.5}
-                color={colors.gray}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                height: SPACING * 4.5,
-                width: SPACING * 4.5,
-                backgroundColor: colors.white,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: SPACING * 2.5,
-              }}
-              onPress={onShare}
-            >
-              <Ionicons name="share" size={SPACING * 2.5} color={colors.gray} />
-            </TouchableOpacity>
           </ImageBackground>
           <View
             style={{
@@ -143,7 +149,7 @@ const RecipeDetailScreen = (props) => {
                   {data.title}
                 </Text>
               </View>
-              {/* <View
+              <View
                 style={{
                   padding: SPACING,
                   paddingHorizontal: SPACING * 3,
@@ -167,14 +173,14 @@ const RecipeDetailScreen = (props) => {
                     color: colors.black,
                   }}
                 >
-                  {recipe.rating}
+                  {data.rating}
                 </Text>
-              </View> */}
+              </View>
             </View>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              {/* <View
+              <View
                 style={{
                   padding: SPACING,
                   paddingHorizontal: SPACING * 2,
@@ -198,7 +204,7 @@ const RecipeDetailScreen = (props) => {
                     color: colors.gray,
                   }}
                 >
-                  {recipe.time}
+                  hnk
                 </Text>
               </View>
               <View
@@ -225,7 +231,7 @@ const RecipeDetailScreen = (props) => {
                     color: colors.gray,
                   }}
                 >
-                  {recipe.del_time}
+                  jnsd
                 </Text>
               </View>
               <View
@@ -252,9 +258,9 @@ const RecipeDetailScreen = (props) => {
                     color: colors.gray,
                   }}
                 >
-                  {recipe.cooking_time}
+                  kn
                 </Text>
-              </View> */}
+              </View>
             </View>
             <View style={{ marginVertical: SPACING * 3 }}>
               <Text
@@ -266,7 +272,7 @@ const RecipeDetailScreen = (props) => {
               >
                 Ingredients
               </Text>
-              {/* {data.map((ingredient) => (
+              {data.composantList.map((ingredient) => (
                 <View
                   style={{
                     marginVertical: SPACING,
@@ -291,10 +297,10 @@ const RecipeDetailScreen = (props) => {
                       marginLeft: SPACING,
                     }}
                   >
-                   nskandln
+                   {ingredient.name}
                   </Text>
                 </View>
-              ))} */}
+              ))}
             </View>
             <Text
               style={{

@@ -5,6 +5,7 @@ import HomeScreen from "./Screens/Restaurant/HomeScreen";
 import WelcomeScreen from "./Screens/Restaurant/WelcomeScreen";
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Test from "./Screens/Restaurant/Test";
 const Stack = createNativeStackNavigator();
 export const ItemContext = createContext();
 export default App=()=>{
@@ -15,6 +16,7 @@ export default App=()=>{
         <Stack.Navigator screenOptions={{
           headerShown: false
           }}
+          initialRouteName="test"
         >
           <Stack.Screen
             name="Home"
@@ -26,6 +28,11 @@ export default App=()=>{
             component={RecipeDetailScreen}
             options={{title: 'RecipeDetailScreen'}}
           />
+        <Stack.Screen
+            name="test"
+            component={Test}
+            options={{title: 'test'}}
+        />
         </Stack.Navigator>
       </NavigationContainer>
     </ItemContext.Provider>
