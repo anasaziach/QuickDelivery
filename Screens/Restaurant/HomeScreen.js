@@ -35,6 +35,7 @@ const HomeScreen = (props) => {
   const fetchData=()=>{
     axios.get("http://"+ipv4+":8080/api/showItems")
     .then(result=>{
+      console.log(result.data)
       setData(result.data)
       setDataFetched(1)
     })
